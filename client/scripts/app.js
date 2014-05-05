@@ -2,7 +2,7 @@
 // Have on clicks in one place
 
 var app = {
-  server: 'http://127.0.0.1/1/classes/messages',
+  server: 'http://127.0.0.1:3000/1/classes/messages',
   currentMessages: '',
   roomname: null,
   person: null,
@@ -11,17 +11,12 @@ var app = {
     var that = this;
 
     this.fetch();
-    // Main fetch logic
-    // setInterval(function() {
-    //   that.fetch(that.roomname, that.person);
-    //   that.getRoomName();
-    // }, 5000);
 
     // Send logic
     $("#enter").on('click', function() {
       var message = {
         'username': window.location.search.split('=')[1],
-        'text': $('textarea').val(),
+        'message': $('textarea').val(),
         'roomname': app.roomname
       };
       app.send(message);
@@ -39,6 +34,7 @@ var app = {
       data: data,
       contentType: 'application/json',
       success: function (response) {
+        console.log('response:', response);
         if (callback) {
           callback(response);
         }
@@ -62,7 +58,7 @@ var app = {
       searchData.where.username = app.person.trim();
     }
     app.request('GET', searchData, function(response) {
-      app.display(response.results);
+      app.display(response);
     });
   },
   getRoomName: function() {
@@ -73,8 +69,8 @@ var app = {
     };
     app.request('GET', data, function(response) {
       var rooms = {};
-      for(var i = 0; i < response.results.length; i++) {
-        rooms[response.results[i].roomname] = true;
+      for(var i = 0; i < response.length; i++) {
+        rooms[response[i].roomname] = true;
       }
       that.buildSidebar(Object.keys(rooms));
     });
@@ -87,7 +83,7 @@ var app = {
 
       var data = {
         username: message.username,
-        description: message.text,
+        description: message.message,
         moment: moment(message.createdAt).startOf('hour').fromNow()
       };
 
