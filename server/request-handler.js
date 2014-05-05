@@ -5,6 +5,23 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
+var storage = require('./storage.js').storage;
+
+var messageOne = {
+    username: 'John Ford',
+    message: 'Hello this is John speaking',
+    roomname: 'Exclusive'
+};
+  var messageTwo = {
+    username: 'Kim Chi',
+    message: 'How many?',
+    roomname: 'Rice Only'
+};
+
+storage.push(messageOne);
+storage.push(messageTwo);
+
+
 exports.handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
@@ -20,18 +37,18 @@ exports.handleRequest = function(request, response) {
    * below about CORS. */
   var headers = defaultCorsHeaders;
 
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "text/json";
 
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
 
-  // response.write();
+  response.write(storage.getAll());
   
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  response.end("Hello, World!");
+  response.end();
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
