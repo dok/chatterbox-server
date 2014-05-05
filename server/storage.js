@@ -4,21 +4,28 @@ exports.storage = {
   getLength: function() {
     return this.storage.length;
   },
-  push: function(username, message, roomname) {
-    var msg = {
-      username: username,
-      message: message,
-      roomname: roomname
-    };
+  push: function(msg) {
+    // var msg = {
+    //   username: username,
+    //   message: message,
+    //   roomname: roomname
+    // };
 
     this.storage.push(msg);
   },
+
+  // Returns an array with the containing results
   get: function(msg) {
-    return _.where(this.storage, {
-      username: msg.username,
-      message: msg.message,
-      roomname: msg.roomname
-    });
+    var query = {};
+    for(var key in msg) {
+      query[key] = msg[key];
+    }
+
+    return _.where(this.storage, query);
+  },
+
+  getAll: function() {
+    return JSON.stringify(this.storage);
   }
 
 };
