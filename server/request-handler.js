@@ -5,7 +5,7 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
-var handleRequest = function(request, response) {
+exports.handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
@@ -25,6 +25,8 @@ var handleRequest = function(request, response) {
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
 
+  // response.write();
+  
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
