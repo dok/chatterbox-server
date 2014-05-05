@@ -10,6 +10,9 @@ exports.storage = {
     //   message: message,
     //   roomname: roomname
     // };
+    if(msg.roomname === null) {
+      msg.roomname = undefined;
+    }
 
     this.storage.push(msg);
   },
