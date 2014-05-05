@@ -6,6 +6,7 @@
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
 var storage = require('./storage.js').storage;
+var qs = require('querystring');
 
 var messageOne = {
     username: 'John Ford',
@@ -41,8 +42,20 @@ exports.handleRequest = function(request, response) {
 
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
+  var methodType = request.method;
+  if(methodType === 'GET' || methodType === 'OPTIONS') {
+    response.write(storage.getAll());
+  } else {
+    request.on('data', function(chunk) {
+      // console.log(JSON.parse(chunk.toString()));
+      message = JSON.parse(chunk.toString());
+      storage.push(message);
+    });
+    // response.write()
+  }
 
-  response.write(storage.getAll());
+
+
   
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
