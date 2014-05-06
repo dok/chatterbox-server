@@ -17,6 +17,10 @@ module.exports = {
       self._ended = true;
       self._data = data;
     };
+    this.write = function(data) {
+      console.log('Response.write called.');
+      self._data = data;
+    };
   },
 
   request: function(url, method, postdata) {
