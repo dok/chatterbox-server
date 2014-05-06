@@ -7,20 +7,22 @@
 
 var storage = require('./storage.js').storage;
 var qs = require('querystring');
+var fs = require('fs');
+var parser = require('./route-parser.js').parser;
 
-var messageOne = {
-    username: 'John Ford',
-    message: 'Hello this is John speaking',
-    roomname: 'Exclusive'
-};
-  var messageTwo = {
-    username: 'Kim Chi',
-    message: 'How many?',
-    roomname: 'Rice Only'
-};
+// var messageOne = {
+//     username: 'John Ford',
+//     message: 'Hello this is John speaking',
+//     roomname: 'Exclusive'
+// };
+//   var messageTwo = {
+//     username: 'Kim Chi',
+//     message: 'How many?',
+//     roomname: 'Rice Only'
+// };
 
-storage.push(messageOne);
-storage.push(messageTwo);
+// storage.push(messageOne);
+// storage.push(messageTwo);
 
 
 exports.handleRequest = function(request, response) {
@@ -31,8 +33,24 @@ exports.handleRequest = function(request, response) {
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
 
   console.log("Serving request type " + request.method + " for url " + request.url);
+  var routes = [
+    "/classes/*"
+  ];
 
-  var statusCode = 200;
+
+  var statusCode;
+  if(request.method === 'GET') {
+    statusCode = 200;
+  } else if(request.method === 'POST') {
+    statusCode = 201;
+  }
+  
+  if(!parser.isValid(routes, request.url)) {
+    statusCode = 404;
+  }
+
+  // fs.readFile(request.url)
+  // fs.exists()
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
@@ -41,22 +59,22 @@ exports.handleRequest = function(request, response) {
   headers['Content-Type'] = "text/json";
 
   /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
   var methodType = request.method;
+  response.writeHead(statusCode, headers);
+
+  
   if(methodType === 'GET' || methodType === 'OPTIONS') {
     response.write(storage.getAll());
   } else {
     request.on('data', function(chunk) {
       // console.log(JSON.parse(chunk.toString()));
+      response.writeHead(201, headers);
       message = JSON.parse(chunk.toString());
       storage.push(message);
     });
     // response.write()
   }
 
-
-
-  
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
