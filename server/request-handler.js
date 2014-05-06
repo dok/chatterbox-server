@@ -25,7 +25,7 @@ var parser = require('./route-parser.js').parser;
 // storage.push(messageTwo);
 
 
-exports.handleRequest = function(request, response) {
+exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
@@ -44,7 +44,7 @@ exports.handleRequest = function(request, response) {
   } else if(request.method === 'POST') {
     statusCode = 201;
   }
-  
+
   if(!parser.isValid(routes, request.url)) {
     statusCode = 404;
   }
