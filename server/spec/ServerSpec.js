@@ -2,7 +2,6 @@ var handler = require('../request-handler');
 var expect = require('../../node_modules/chai/chai').expect;
 var basicServer = require('../basic-server').server;
 var stubs = require('./Stubs');
-var storage = require('../storage.js');
 
 // Conditional async testing, akin to Jasmine's waitsFor()
 // Will wait for test to be truthy before executing callback
@@ -24,28 +23,7 @@ describe('Node Server Request Listener Function', function() {
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
   });
-
-  it('Should send back parsable stringified JSON', function() {
-    var req = new stubs.request('/classes/room1', 'GET');
-    var res = new stubs.response();
-
-    handler.handler(req, res);
-
-    expect(JSON.parse.bind(this, res._data)).to.not.throw();
-    expect(res._ended).to.equal(true);
-  });
-
-  it('Should send back an object', function() {
-    var req = new stubs.request('/classes/room1', 'GET');
-    var res = new stubs.response();
-
-    handler.handler(req, res);
-
-    var parsedBody = JSON.parse(res._data);
-    expect(parsedBody).to.be.an('object');
-    expect(res._ended).to.equal(true);
-  });
-
+ 
   it('Should send an object containing a `results` array', function() {
     var req = new stubs.request('/classes/room1', 'GET');
     var res = new stubs.response();

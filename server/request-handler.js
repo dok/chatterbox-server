@@ -34,12 +34,14 @@ exports.handler = function(request, response) {
 
   console.log("Serving request type " + request.method + " for url " + request.url);
   var routes = [
+    "1/classes/*",
     "/classes/*"
   ];
 
 
   var statusCode;
-  if(request.method === 'GET') {
+
+  if(request.method === 'GET' || request.method === 'OPTIONS') {
     statusCode = 200;
   } else if(request.method === 'POST') {
     statusCode = 201;
@@ -61,10 +63,11 @@ exports.handler = function(request, response) {
   /* .writeHead() tells our server what HTTP status code to send back */
   var methodType = request.method;
   response.writeHead(statusCode, headers);
-
   
+
   if(methodType === 'GET' || methodType === 'OPTIONS') {
     response.write(storage.getAll());
+    console.log(storage.getAll());
   } else {
     request.on('data', function(chunk) {
       // console.log(JSON.parse(chunk.toString()));

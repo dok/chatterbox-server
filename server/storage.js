@@ -28,7 +28,7 @@ exports.storage = {
   },
 
   getAll: function() {
-    return JSON.stringify(this.storage);
+    return JSON.stringify({results: this.storage});
   }
 
 };

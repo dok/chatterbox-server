@@ -10,10 +10,11 @@ exports.parser = {
    * @return boolean
    */
   isValid: function(routes, target) {
-    // "/classes/*"
-    // /classes/room1
     for(var i = 0; i < routes.length; i++) {
       var route = routes[i];
+      if(route === target) {
+        return true;
+      }
       var routeSplit = _.without(route.split('/'), "");
 
       var targetSplit = _.without(target.split('/'), "");

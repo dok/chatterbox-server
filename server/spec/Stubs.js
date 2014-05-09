@@ -18,7 +18,7 @@ module.exports = {
       self._data = data;
     };
     this.write = function(data) {
-      console.log('Response.write called.');
+      console.log('Response.write called.', data);
       self._data = data;
     };
   },

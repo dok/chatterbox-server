@@ -12,6 +12,10 @@ var app = {
 
     this.fetch();
 
+    setInterval(function() {
+      that.fetch();
+    }, 3000);
+
     // Send logic
     $("#enter").on('click', function() {
       var message = {
@@ -58,7 +62,7 @@ var app = {
       searchData.where.username = app.person.trim();
     }
     app.request('GET', searchData, function(response) {
-      app.display(response);
+      app.display(response.results);
     });
   },
   getRoomName: function() {
@@ -69,8 +73,8 @@ var app = {
     };
     app.request('GET', data, function(response) {
       var rooms = {};
-      for(var i = 0; i < response.length; i++) {
-        rooms[response[i].roomname] = true;
+      for(var i = 0; i < response.results.length; i++) {
+        rooms[response.results[i].roomname] = true;
       }
       that.buildSidebar(Object.keys(rooms));
     });
@@ -88,7 +92,7 @@ var app = {
       };
 
       var html = engine.render('messageTemplate', data);
-      $('#messages').append(html);
+      $('#messages').prepend(html);
       if ($('.chat').length > 100) {
         $('.chat:last-child').remove();
       }
